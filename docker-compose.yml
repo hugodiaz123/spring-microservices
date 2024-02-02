@@ -1,38 +1,70 @@
 services:
-  postgres:
-    container_name: postgres-micro
+  postgres-customer:
+    container_name: postgres-customer
     image: postgres:16.1
     environment:
       POSTGRES_USER: amigoscode
       POSTGRES_PASSWORD: password
-      PGDATA: /data/postgres-micro
+      PGDATA: /data/postgres-customer
     volumes:
-      - postgres:/data/postgres-micro
+      - postgres-customer:/data/postgres-customer
     ports:
       - "5444:5432"
     networks:
-      - postgres
+      - postgres-microservices
+    restart: unless-stopped
+
+  postgres-fraud:
+    container_name: postgres-fraud
+    image: postgres:16.1
+    environment:
+      POSTGRES_USER: amigoscode
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres-fraud
+    volumes:
+      - postgres-fraud:/data/postgres-fraud
+    ports:
+      - "5443:5432"
+    networks:
+      - postgres-microservices
+    restart: unless-stopped
+
+  postgres-notification:
+    container_name: postgres-notification
+    image: postgres:16.1
+    environment:
+      POSTGRES_USER: amigoscode
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres-notification
+    volumes:
+      - postgres-notification:/data/postgres-notification
+    ports:
+      - "5442:5432"
+    networks:
+      - postgres-microservices
     restart: unless-stopped
 
   pgadmin:
-    container_name: pgadmin-micro
+    container_name: pgadmin-microservices
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     volumes:
-      - pgadmin:/var/lib/pgadmin-micro
+      - pgadmin:/var/lib/pgadmin-microservices
     ports:
       - "5051:80"
     networks:
-      - postgres
+      - postgres-microservices
     restart: unless-stopped
 
 networks:
-  postgres:
+  postgres-microservices:
     driver: bridge
 
 volumes:
-  postgres:
+  postgres-customer:
+  postgres-fraud:
+  postgres-notification:
   pgadmin:
