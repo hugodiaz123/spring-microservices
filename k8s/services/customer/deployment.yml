@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customer
+  labels:
+    app: customer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: customer
+  template:
+    metadata:
+      name: customer
+      labels:
+        app: customer
+    spec:
+      containers:
+        - name: customer
+          image: hugodiaz/customer:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: kube
+            - name: SPRING_DATASOURCE_USERNAME
+              value: doadmin
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://customer-database-amigoscode-do-user-15983897-0.c.db.ondigitalocean.com:25060/customer
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: AVNS__TEy6a_ndiFTZKHZCNZ
+      restartPolicy: Always

@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-fraud-pv
+  labels:
+    type: local
+    app: postgres-fraud
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /mnt/data/fraud
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-fraud-pvc
+  labels:
+    type: local
+    app: postgres-fraud
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi

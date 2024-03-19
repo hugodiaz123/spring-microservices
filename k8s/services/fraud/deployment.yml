@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fraud
+  labels:
+    app: fraud
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fraud
+  template:
+    metadata:
+      name: fraud
+      labels:
+        app: fraud
+    spec:
+      containers:
+        - name: fraud
+          image: hugodiaz/fraud:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: kube
+            - name: SPRING_DATASOURCE_USERNAME
+              value: doadmin
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://fraud-database-amigoscode-do-user-15983897-0.c.db.ondigitalocean.com:25060/fraud
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: AVNS_jT9bqurohMEvClPH1WX
+      restartPolicy: Always
